@@ -1,0 +1,17 @@
+.search-container {
+    width: 700px;
+    margin: 0 auto;
+}
+
+.search-picklist {
+    height: 400px;
+    width: 800px;
+    overflow: scroll;
+    list-style-type: none;
+    text-align: left;
+}
+
+.food-item:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
+}
