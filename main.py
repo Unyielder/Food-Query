@@ -17,16 +17,42 @@ def index(request: Request):
 @app.post("/query")
 async def search_food_desc(request: Request) -> RedirectResponse:
     form = await request.form()
-    user_input = form.get("foodName")
-    foods = fuzzy_search(user_input)
-    foods = json.dumps(foods)
+    user_input = form.get("foodDescSearch")
 
-    response = RedirectResponse(f'/query/{foods}')
+    response = RedirectResponse(f'/query/{user_input}')
     response.status_code = 302
     return response
 
 
-@app.get('/query/{foods}')
-async def select_food_desc(request: Request, foods: str):
-    foods = json.loads(foods)
-    return templates.TemplateResponse("foodNames.html", {"request": request, "foods": foods})
+@app.get('/query/{user_input}')
+async def get_food_desc(request: Request, user_input: str):
+    foods = fuzzy_search(user_input)
+    return templates.TemplateResponse("foodDescriptions.html", {"request": request, "foods": foods})
+
+
+@app.post('/query/{user_input}')
+async def select_food_desc(request: Request, user_input: str):
+    form = await request.form()
+    food_code = form.get('foodName')
+
+    response = RedirectResponse(f'/query/{user_input}/{food_code}')
+    response.status_code = 302
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

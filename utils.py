@@ -14,3 +14,12 @@ def fuzzy_search(text: str):
                 search_results.append({'food_code': mapp['food_code'], 'food_description': name[0]})
 
     return search_results
+
+
+def get_servings(food_code):
+    res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
+                       f'=json&lang=en')
+
+    servings = res.json()
+    print(servings)
+    return servings
