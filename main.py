@@ -40,6 +40,15 @@ async def select_food_desc(request: Request, user_input: str):
     return response
 
 
+@app.get('/query/{user_input}/{food_code}')
+async def get_servings(request: Request, user_input: str, food_code):
+    res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
+                       f'=json&lang=en')
+
+    servings = res.json()
+    print(servings)
+    return templates.TemplateResponse("foodServings.html", {"request": request, "servings": servings})
+
 
 
 
