@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Nutrient Groups</h1>
+
+<form method="post">
+
+  <input type="checkbox" id="aminos" value="Amino Acids">
+  <label for="aminos">Amino Acids</label><br>
+
+    <input type="checkbox" id="lipids" value="Amino Acids">
+  <label for="lipids">Lipids</label><br>
+
+    <input type="checkbox" id="minerals" value="Amino Acids">
+  <label for="minerals">Minerals</label><br>
+
+    <input type="checkbox" id="carbs" value="Amino Acids">
+  <label for="carbs">Other Carbohydrates</label><br>
+
+    <input type="checkbox" id="other_components" value="Amino Acids">
+  <label for="other_components">Other Components</label><br>
+
+    <input type="checkbox" id="proximates" value="Amino Acids">
+  <label for="proximates">Proximates</label><br>
+
+    <input type="checkbox" id="vitamins" value="Amino Acids">
+  <label for="vitamins">Vitamins</label><br>
+
+
+
+  <input type="submit" value="Select">
+</form>
+
+
+
+
+{% endblock %}
