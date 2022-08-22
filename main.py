@@ -84,9 +84,34 @@ async def get_nutrients(request: Request, food_code, serving_size):
     df_food = df_food[df_food['measure_name'] == test_session['food'].serving_size]
     df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
     df_food.sort_values(by='serving_value', inplace=True, ascending=False)
-    print(df_food)
 
-    return templates.TemplateResponse("foodNutrients.html", {"request": request, "df_food": df_food})
+    df_aminos = df_food[df_food['nutrient_group_name'] == 'Amino Acids'].reset_index(drop=True)
+    df_lipids = df_food[df_food['nutrient_group_name'] == 'Lipids'].reset_index(drop=True)
+    df_minerals = df_food[df_food['nutrient_group_name'] == 'Minerals'].reset_index(drop=True)
+    df_carbs = df_food[df_food['nutrient_group_name'] == 'Other Carbohydrates'].reset_index(drop=True)
+    df_other = df_food[df_food['nutrient_group_name'] == 'Other Components'].reset_index(drop=True)
+    df_prox = df_food[df_food['nutrient_group_name'] == 'Proximates'].reset_index(drop=True)
+    df_vita = df_food[df_food['nutrient_group_name'] == 'Vitamins'].reset_index(drop=True)
+
+    print(df_aminos)
+    print(df_lipids)
+    print(df_minerals)
+    print(df_carbs)
+    print(df_other)
+    print(df_prox)
+    print(df_vita)
+
+    return templates.TemplateResponse("foodNutrients.html", {"request": request,
+                                                             "df_food": df_food,
+                                                             "df_aminos": df_aminos,
+                                                             "df_lipids": df_lipids,
+                                                             "df_minerals": df_minerals,
+                                                             "df_carbs": df_carbs,
+                                                             "df_other": df_other,
+                                                             "df_prox": df_prox,
+                                                             "df_vita": df_vita
+                                                             })
+
 
 
 
