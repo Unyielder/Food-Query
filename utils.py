@@ -1,5 +1,6 @@
 from fuzzywuzzy import process, fuzz
 import requests
+import pandas as pd
 
 
 def fuzzy_search(text: str):
@@ -16,10 +17,17 @@ def fuzzy_search(text: str):
     return search_results
 
 
-def get_servings(food_code):
-    res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
+async def get_servings(food_code):
+    res = await requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
                        f'=json&lang=en')
 
     servings = res.json()
     print(servings)
     return servings
+
+
+def get_food_data(url: str):
+    res = requests.get(url)
+    data = res.json()
+    df = pd.DataFrame(data, index=[i for i in range(len(data))])
+    return df

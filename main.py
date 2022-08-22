@@ -3,6 +3,7 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from utils import *
 from food import Food
+import pandas as pd
 import json
 
 
@@ -50,24 +51,42 @@ async def get_servings(request: Request, food_code):
     return templates.TemplateResponse("foodServings.html", {"request": request, "servings": servings})
 
 
+test_session = {}
+
+
 @app.post('/query/{food_code}/serving_size')
 async def select_servings(request: Request, food_code):
     form = await request.form()
     serving_size = form.get('ing_measure')
 
     food = Food(food_code, serving_size)
+    test_session['food'] = food
     response = RedirectResponse(f'/query/{food_code}/{serving_size}')
     response.status_code = 302
     return response
 
 
 @app.get('/query/{food_code}/{serving_size}')
-async def get_nutrient_groups(request: Request, food_code, serving_size):
-    res = requests.get(r"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json")
-    nutrient_groups = res.json()
-    print(nutrient_groups)
+async def get_nutrients(request: Request, food_code, serving_size):
+    df_amount = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en")
+    df_amount = df_amount[['food_code', 'nutrient_value', 'nutrient_name_id', 'nutrient_web_name']]
+    df_serving = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en")
+    df_serving = df_serving[['food_code', 'conversion_factor_value', 'measure_name']]
+    df_names = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json")
+    df_names = df_names[['nutrient_name_id', 'nutrient_web_name', 'unit', 'nutrient_group_id']]
+    df_groups = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json")
+    df_groups = df_groups[['nutrient_group_id', 'nutrient_group_name']]
 
-    return templates.TemplateResponse("nutrientGroups.html", {"request": request, "nutrients_groups": nutrient_groups})
+    df_food = df_amount.merge(df_names, left_on='nutrient_name_id', right_on='nutrient_name_id')
+    df_food = df_food.merge(df_groups, left_on='nutrient_group_id', right_on='nutrient_group_id')
+    df_food = df_food.merge(df_serving, left_on='food_code', right_on='food_code')
+
+    df_food = df_food[df_food['measure_name'] == test_session['food'].serving_size]
+    df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
+    df_food.sort_values(by='serving_value', inplace=True, ascending=False)
+    print(df_food)
+
+    return templates.TemplateResponse("foodNutrients.html", {"request": request, "df_food": df_food})
 
 
 

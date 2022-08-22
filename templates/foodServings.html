@@ -12,7 +12,7 @@
             <form method="post">
                 <select name="ing_measure" id="ing_measure" size="5" >
                     {% for serving in servings %}
-                    <option value="{{ serving['conversion_factor_value'] }}">{{ serving['measure_name'] }}</option>
+                    <option value="{{ serving['measure_name'] }}">{{ serving['measure_name'] }}</option>
                     {% endfor %}
                 </select>
                 <input class="btn btn-primary" type="submit" name="btn" value="Select">

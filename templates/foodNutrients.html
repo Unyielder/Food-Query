@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Nutrient name</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+
+    <body>
+        {% for idx, row in df_food.iterrows() %}
+            <tr>
+                <td>{{  row['nutrient_web_name_x']  }}</td>
+                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+            </tr>
+        {% endfor %}
+
+    </body>
+</table>
+
+
+
+
+{% endblock %}
