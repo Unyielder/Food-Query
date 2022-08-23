@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<a href="{{ url_for('index') }}">New query</a>
+
 <p>Query Results for:<br> <b>{{ food_desc }}, {{ serving_size }}</b></p>
 
 <input type="checkbox" id="aminos" checked onClick="toggleTable('aminosTable')">
