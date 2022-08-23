@@ -1,13 +1,15 @@
 from fastapi import FastAPI, Request
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+import os
 from utils import *
 from food import Food
-import pandas as pd
-import json
 
+root = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI()
+app.mount("/js", StaticFiles(directory=os.path.join(root, 'static/js')), name="js")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -29,45 +31,44 @@ async def search_food_desc(request: Request) -> RedirectResponse:
 @app.get('/query/{user_input}')
 async def get_food_desc(request: Request, user_input: str):
     foods = fuzzy_search(user_input)
-    return templates.TemplateResponse("foodDescriptions.html", {"request": request, "foods": foods})
+    return templates.TemplateResponse("foodDescriptions.html", {"request": request, "user_input": user_input, "foods": foods})
 
 
 @app.post('/query/{user_input}')
-async def select_food_desc(request: Request, user_input: str):
+async def select_food_desc(request: Request):
     form = await request.form()
-    food_code = form.get('foodName')
-
-    response = RedirectResponse(f'/query/{food_code}/serving_size')
+    food_code, food_desc = form.get('foodName').split(';')
+    response = RedirectResponse(f'/query/{food_code}/{food_desc}/serving_size')
     response.status_code = 302
     return response
 
 
-@app.get('/query/{food_code}/serving_size')
-async def get_servings(request: Request, food_code):
+@app.get('/query/{food_code}/{food_desc}/serving_size')
+async def get_servings(request: Request, food_code, food_desc):
     res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
                        f'=json&lang=en')
     servings = res.json()
     print(servings)
-    return templates.TemplateResponse("foodServings.html", {"request": request, "servings": servings})
+    return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
 
 
 test_session = {}
 
 
-@app.post('/query/{food_code}/serving_size')
-async def select_servings(request: Request, food_code):
+@app.post('/query/{food_code}/{food_desc}/serving_size')
+async def select_servings(request: Request, food_code, food_desc):
     form = await request.form()
     serving_size = form.get('ing_measure')
 
-    food = Food(food_code, serving_size)
+    food = Food(food_code, food_desc, serving_size)
     test_session['food'] = food
-    response = RedirectResponse(f'/query/{food_code}/{serving_size}')
+    response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
     response.status_code = 302
     return response
 
 
-@app.get('/query/{food_code}/{serving_size}')
-async def get_nutrients(request: Request, food_code, serving_size):
+@app.get('/query/{food_code}/{food_desc}/{serving_size}')
+async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_amount = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en")
     df_amount = df_amount[['food_code', 'nutrient_value', 'nutrient_name_id', 'nutrient_web_name']]
     df_serving = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en")
@@ -92,16 +93,10 @@ async def get_nutrients(request: Request, food_code, serving_size):
     df_other = df_food[df_food['nutrient_group_name'] == 'Other Components'].reset_index(drop=True)
     df_prox = df_food[df_food['nutrient_group_name'] == 'Proximates'].reset_index(drop=True)
     df_vita = df_food[df_food['nutrient_group_name'] == 'Vitamins'].reset_index(drop=True)
-
-    print(df_aminos)
-    print(df_lipids)
-    print(df_minerals)
-    print(df_carbs)
-    print(df_other)
-    print(df_prox)
-    print(df_vita)
-
+    print(df_food)
     return templates.TemplateResponse("foodNutrients.html", {"request": request,
+                                                             "food_desc": food_desc,
+                                                             "serving_size": serving_size,
                                                              "df_food": df_food,
                                                              "df_aminos": df_aminos,
                                                              "df_lipids": df_lipids,

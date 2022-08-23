@@ -2,23 +2,20 @@
 
 {% block content %}
 
-<h1>Serving Size</h1>
-<h3>{{ food_name }}</h3>
+<h2>Serving Size</h2>
+<p>Selected food: <b>{{ food_desc }}</b></p>
 
-<div class="container">
+<div class="container-serving">
 
-    <div class="row">
-        <div class="col-4">
-            <form method="post">
-                <select name="ing_measure" id="ing_measure" size="5" >
-                    {% for serving in servings %}
-                    <option value="{{ serving['measure_name'] }}">{{ serving['measure_name'] }}</option>
-                    {% endfor %}
-                </select>
-                <input class="btn btn-primary" type="submit" name="btn" value="Select">
-            </form>
-        </div>
-    </div>
+    <form method="post">
+        <select name="ing_measure" id="ing_measure" size="5" >
+            {% for serving in servings %}
+            <option value="{{ serving['measure_name'] }}">{{ serving['measure_name'] }}</option>
+            {% endfor %}
+        </select>
+        <input class="btn btn-primary" type="submit" name="btn" value="Select">
+    </form>
+
 </div>
 
 

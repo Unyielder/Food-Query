@@ -2,10 +2,12 @@
 
 {% block content %}
     <div class="container-foodName">
+
+        <p>Search item: <b>"{{ user_input }}"</b></p>
         <form method="post">
             <select name="foodName" id="foodName" size="10" >
                 {% for food in foods %}
-                <option value="{{ food['food_code'] }}">{{ food['food_description'] }}</option>
+                <option value="{{ food['food_code'] }};{{ food['food_description'] }}">{{ food['food_description'] }}</option>
                 {% endfor %}
             </select>
             <input type="submit" name="btn" value="Select">
