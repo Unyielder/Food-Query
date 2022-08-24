@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-index">
+    <div >
 
         <form method="post">
-            <label for="foodDescSearch">Please enter food description</label>
-            <input type="text" id="foodDescSearch" name="foodDescSearch" required>
-            <button type="submit" name="btn" value="Search">Search</button>
+            <label class="form-label" for="foodDescSearch">Please enter food description</label>
+            <input class="form-control mb-3" type="text" id="foodDescSearch" name="foodDescSearch" required>
+            <button class="btn btn-primary" type="submit" name="btn" value="Search">Search</button>
         </form>
     </div>
 

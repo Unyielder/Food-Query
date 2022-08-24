@@ -107,19 +107,3 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
                                                              "df_vita": df_vita
                                                              })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

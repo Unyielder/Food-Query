@@ -2,13 +2,12 @@
 
 {% block content %}
 
-<h2>Serving Size</h2>
-<p>Selected food: <b>{{ food_desc }}</b></p>
+<h5 class="mb-4"><span style="font-weight:300;">Selected food: </span>{{ food_desc }}</h5>
 
 <div class="container-serving">
 
     <form method="post">
-        <select name="ing_measure" id="ing_measure" size="5" >
+        <select class="form-select mb-3" name="ing_measure" id="ing_measure" size="5" >
             {% for serving in servings %}
             <option value="{{ serving['measure_name'] }}">{{ serving['measure_name'] }}</option>
             {% endfor %}
