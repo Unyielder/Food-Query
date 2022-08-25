@@ -1,5 +1,9 @@
+table {
+    width:500px;
+}
+
 .unbreakable td{
-    width: 100% !important;
+    width: 75% !important;
 }
 .unbreakable tr{
     page-break-inside: avoid !important;
