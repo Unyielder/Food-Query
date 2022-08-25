@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="mx-auto" style="width: 500px;">
+    <h5 class="mb-4"><span style="font-weight:300;">Selected food: </span>{{ food_desc }}</h5>
 
-<h5 class="mb-4"><span style="font-weight:300;">Selected food: </span>{{ food_desc }}</h5>
 
-<div class="container-serving">
 
     <form method="post">
         <select class="form-select mb-3" name="ing_measure" id="ing_measure" size="5" >

@@ -1,0 +1,6 @@
+.unbreakable td{
+    width: 100% !important;
+}
+.unbreakable tr{
+    page-break-inside: avoid !important;
+}

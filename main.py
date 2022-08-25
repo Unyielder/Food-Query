@@ -3,13 +3,20 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
+from pathlib import Path
 from utils import *
 from food import Food
 
 root = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI()
+
 app.mount("/js", StaticFiles(directory=os.path.join(root, 'static/js')), name="js")
+app.mount(
+    "/static",
+    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "Food_Query/static"),
+    name="static",
+)
 templates = Jinja2Templates(directory="templates")
 
 

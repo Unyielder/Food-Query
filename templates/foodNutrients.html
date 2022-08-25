@@ -1,172 +1,179 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="mb-3" style="text-decoration:none; display:block;" href="{{ url_for('index') }}">New query</a>
-
-<h5 class="mb-5"><span style="font-weight:300;">Query Results for:</span><br> <b>{{ food_desc }}, {{ serving_size }}</b></h5>
-
-<input class="form-check-input" type="checkbox" id="aminos" checked onClick="toggleTable('aminosTable')">
-<label class="form-label" for="aminos">Amino Acids</label><br>
-
-<input class="form-check-input" type="checkbox" id="lipids" checked onClick="toggleTable('lipidsTable')">
-<label class="form-label" for="lipids">Lipids</label><br>
-
-<input class="form-check-input" type="checkbox" id="minerals"  checked onClick="toggleTable('mineralsTable')">
-<label class="form-label" for="minerals">Minerals</label><br>
-
-<input class="form-check-input" type="checkbox" id="carbs" checked onClick="toggleTable('carbsTable')">
-<label class="form-label" for="carbs">Other Carbohydrates</label><br>
-
-<input class="form-check-input" type="checkbox" id="other_components" checked onClick="toggleTable('othersTable')">
-<label class="form-label" for="other_components">Other Components</label><br>
-
-<input class="form-check-input" type="checkbox" id="proximates" checked onClick="toggleTable('proxTable')">
-<label class="form-label" for="proximates">Proximates</label><br>
-
-<input class="form-check-input" type="checkbox" id="vitamins" checked onClick="toggleTable('vitaTable')">
-<label class="form-label" for="vitamins">Vitamins</label><br>
 
 
-<table class="table table-bordered table-hover caption-top" id="aminosTable">
-    <caption>Amino acids</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-1" style="min-width:500px">
+            <a class="mb-3" style="text-decoration:none; display:block;" href="{{ url_for('index') }}">New query</a>
+            <h5 class="mb-5"><span style="font-weight:300;">Query Results for:</span><br> <b>{{ food_desc }}, {{ serving_size }}</b></h5>
 
-    <body>
-        {% for idx, row in df_aminos.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <input class="form-check-input" type="checkbox" id="aminos" checked onClick="toggleTable('aminosTable')">
+            <label class="form-label" for="aminos">Amino Acids</label><br>
 
-    </body>
-</table>
+            <input class="form-check-input" type="checkbox" id="lipids" checked onClick="toggleTable('lipidsTable')">
+            <label class="form-label" for="lipids">Lipids</label><br>
 
-<table class="table table-bordered table-hover caption-top" id="lipidsTable">
-    <caption>Lipds</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+            <input class="form-check-input" type="checkbox" id="minerals"  checked onClick="toggleTable('mineralsTable')">
+            <label class="form-label" for="minerals">Minerals</label><br>
 
-    <body>
-        {% for idx, row in df_lipids.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <input class="form-check-input" type="checkbox" id="carbs" checked onClick="toggleTable('carbsTable')">
+            <label class="form-label" for="carbs">Other Carbohydrates</label><br>
 
-    </body>
-</table>
+            <input class="form-check-input" type="checkbox" id="other_components" checked onClick="toggleTable('othersTable')">
+            <label class="form-label" for="other_components">Other Components</label><br>
 
-<table class="table table-bordered table-hover caption-top" id="mineralsTable">
-    <caption>Minerals</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+            <input class="form-check-input" type="checkbox" id="proximates" checked onClick="toggleTable('proxTable')">
+            <label class="form-label" for="proximates">Proximates</label><br>
 
-    <body>
-        {% for idx, row in df_minerals.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <input class="form-check-input" type="checkbox" id="vitamins" checked onClick="toggleTable('vitaTable')">
+            <label class="form-label" for="vitamins">Vitamins</label><br>
+        </div>
+        <div class="col-sm">
+            <table class="table table-bordered table-hover caption-top unbreakable" id="aminosTable">
+                <caption>Amino acids</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
 
-    </body>
-</table>
+                <body>
+                    {% for idx, row in df_aminos.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
 
-<table class="table table-bordered table-hover caption-top"id="carbsTable">
-    <caption>Other Carbohydrates</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+                </body>
+            </table>
 
-    <body>
-        {% for idx, row in df_carbs.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <table class="table table-bordered table-hover caption-top" id="lipidsTable">
+                <caption>Lipids</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
 
-    </body>
-</table>
+                <body>
+                    {% for idx, row in df_lipids.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
 
-<table class="table table-bordered table-hover caption-top" id="othersTable">
-    <caption>Other Components</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+                </body>
+            </table>
 
-    <body>
-        {% for idx, row in df_other.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <table class="table table-bordered table-hover caption-top" id="mineralsTable">
+                <caption>Minerals</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
 
-    </body>
-</table>
+                <body>
+                    {% for idx, row in df_minerals.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
 
-<table class="table table-bordered table-hover caption-top" id="proxTable">
-    <caption>Proximates</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+                </body>
+            </table>
 
-    <body>
-        {% for idx, row in df_prox.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <table class="table table-bordered table-hover caption-top"id="carbsTable">
+                <caption>Other Carbohydrates</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
 
-    </body>
-</table>
+                <body>
+                    {% for idx, row in df_carbs.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
 
-<table class="table table-bordered table-hover caption-top mb-5" id="vitaTable">
-    <caption>Vitamins</caption>
-    <thead>
-        <tr>
-            <th>Nutrient name</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+                </body>
+            </table>
 
-    <body>
-        {% for idx, row in df_vita.iterrows() %}
-            <tr>
-                <td>{{  row['nutrient_web_name_x']  }}</td>
-                <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
-            </tr>
-        {% endfor %}
+            <table class="table table-bordered table-hover caption-top" id="othersTable">
+                <caption>Other Components</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
 
-    </body>
-</table>
+                <body>
+                    {% for idx, row in df_other.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
 
+                </body>
+            </table>
+
+            <table class="table table-bordered table-hover caption-top" id="proxTable">
+                <caption>Proximates</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <body>
+                    {% for idx, row in df_prox.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </body>
+            </table>
+
+            <table class="table table-bordered table-hover caption-top mb-5" id="vitaTable">
+                <caption>Vitamins</caption>
+                <thead>
+                    <tr>
+                        <th>Nutrient name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <body>
+                    {% for idx, row in df_vita.iterrows() %}
+                        <tr>
+                            <td>{{  row['nutrient_web_name_x']  }}</td>
+                            <td>{{  row['serving_value'] }} {{ row['unit'] }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </body>
+            </table>
+        </div>
+    </div>
+
+</div>
 
 
 
