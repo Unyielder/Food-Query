@@ -18,7 +18,7 @@ def fuzzy_search(text: str):
 
 
 async def get_servings(food_code):
-    res = await requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
+    res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
                        f'=json&lang=en')
 
     servings = res.json()
@@ -26,7 +26,7 @@ async def get_servings(food_code):
     return servings
 
 
-def get_food_data(url: str):
+async def get_food_data(url: str):
     res = requests.get(url)
     data = res.json()
     df = pd.DataFrame(data, index=[i for i in range(len(data))])

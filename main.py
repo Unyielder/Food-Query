@@ -70,13 +70,13 @@ async def select_servings(request: Request, food_code, food_desc):
 
 @app.get('/query/{food_code}/{food_desc}/{serving_size}')
 async def get_nutrients(request: Request, food_code, food_desc, serving_size):
-    df_amount = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en")
+    df_amount = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en")
     df_amount = df_amount[['food_code', 'nutrient_value', 'nutrient_name_id', 'nutrient_web_name']]
-    df_serving = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en")
+    df_serving = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en")
     df_serving = df_serving[['food_code', 'conversion_factor_value', 'measure_name']]
-    df_names = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json")
+    df_names = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json")
     df_names = df_names[['nutrient_name_id', 'nutrient_web_name', 'unit', 'nutrient_group_id']]
-    df_groups = get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json")
+    df_groups = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json")
     df_groups = df_groups[['nutrient_group_id', 'nutrient_group_name']]
 
     df_food = df_amount.merge(df_names, left_on='nutrient_name_id', right_on='nutrient_name_id')
