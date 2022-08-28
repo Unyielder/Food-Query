@@ -3,7 +3,6 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
-from pathlib import Path
 from utils import *
 from food import Food
 
