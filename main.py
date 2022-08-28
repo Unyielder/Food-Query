@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
 from utils import *
+from food import Food
 
 root = os.path.dirname(os.path.abspath(__file__))
 
@@ -52,10 +53,16 @@ async def get_servings(request: Request, food_code, food_desc):
     return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
 
 
+test_session = {}
+
+
 @app.post('/query/{food_code}/{food_desc}/serving_size')
 async def select_servings(request: Request, food_code, food_desc):
     form = await request.form()
     serving_size = form.get('ing_measure')
+
+    food = Food(food_code, food_desc, serving_size)
+    test_session['food'] = food
     response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
     response.status_code = 302
     return response
