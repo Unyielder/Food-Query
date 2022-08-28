@@ -11,12 +11,7 @@ root = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI()
 
-app.mount("/js", StaticFiles(directory=os.path.join(root, 'static/js')), name="js")
-app.mount(
-    "/static",
-    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "Food_Query/static"),
-    name="static",
-)
+app.mount("/static", StaticFiles(directory=os.path.join(root, 'static')), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
