@@ -1,15 +1,16 @@
 from fastapi import FastAPI, Request
 from starlette.responses import RedirectResponse
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
-from utils import fuzzy_search, get_food_servings, get_food_data
+from utils import *
 from food import Food
 
-root = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI()
-
+app.add_middleware(SessionMiddleware, secret_key="SECRET_KEY")
+root = os.path.dirname(os.path.abspath(__file__))
 app.mount("/static", StaticFiles(directory=os.path.join(root, 'static')), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -46,12 +47,8 @@ async def select_food_desc(request: Request):
 
 @app.get('/query/{food_code}/{food_desc}/serving_size')
 async def get_servings(request: Request, food_code, food_desc):
-    
     servings = await get_food_servings(food_code)
     return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
-
-
-test_session = {}
 
 
 @app.post('/query/{food_code}/{food_desc}/serving_size')
@@ -60,7 +57,7 @@ async def select_servings(request: Request, food_code, food_desc):
     serving_size = form.get('ing_measure')
 
     food = Food(food_code, food_desc, serving_size)
-    test_session['food'] = food
+    request.session['food'] = food.__dict__
     response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
     response.status_code = 302
     return response
@@ -81,7 +78,9 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_food = df_food.merge(df_groups, left_on='nutrient_group_id', right_on='nutrient_group_id')
     df_food = df_food.merge(df_serving, left_on='food_code', right_on='food_code')
 
-    df_food = df_food[df_food['measure_name'] == test_session['food'].serving_size]
+    serving_size = request.session['food']['serving_size']
+    df_food = df_food[df_food['measure_name'] == serving_size]
+    # df_food = df_food[df_food['measure_name'] == test_session['food'].serving_size]
     df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
     df_food.sort_values(by='serving_value', inplace=True, ascending=False)
 
