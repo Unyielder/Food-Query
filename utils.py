@@ -17,7 +17,7 @@ def fuzzy_search(text: str):
     return search_results
 
 
-async def get_servings(food_code):
+async def get_food_servings(food_code: str):
     res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
                        f'=json&lang=en')
 

@@ -3,7 +3,7 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
-from utils import *
+from utils import fuzzy_search, get_food_servings, get_food_data
 from food import Food
 
 root = os.path.dirname(os.path.abspath(__file__))
@@ -46,10 +46,8 @@ async def select_food_desc(request: Request):
 
 @app.get('/query/{food_code}/{food_desc}/serving_size')
 async def get_servings(request: Request, food_code, food_desc):
-    res = requests.get(f'https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type'
-                       f'=json&lang=en')
-    servings = res.json()
-    print(servings)
+    
+    servings = await get_food_servings(food_code)
     return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
 
 
