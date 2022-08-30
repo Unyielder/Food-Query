@@ -22,7 +22,6 @@ async def get_food_servings(food_code: str):
                        f'=json&lang=en')
 
     servings = res.json()
-    print(servings)
     return servings
 
 

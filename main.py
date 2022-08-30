@@ -4,7 +4,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
-from utils import *
+from service import *
 from food import Food
 
 
@@ -80,7 +80,6 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
 
     serving_size = request.session['food']['serving_size']
     df_food = df_food[df_food['measure_name'] == serving_size]
-    # df_food = df_food[df_food['measure_name'] == test_session['food'].serving_size]
     df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
     df_food.sort_values(by='serving_value', inplace=True, ascending=False)
 
@@ -91,7 +90,6 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_other = df_food[df_food['nutrient_group_name'] == 'Other Components'].reset_index(drop=True)
     df_prox = df_food[df_food['nutrient_group_name'] == 'Proximates'].reset_index(drop=True)
     df_vita = df_food[df_food['nutrient_group_name'] == 'Vitamins'].reset_index(drop=True)
-    print(df_food)
     return templates.TemplateResponse("foodNutrients.html", {"request": request,
                                                              "food_desc": food_desc,
                                                              "serving_size": serving_size,
@@ -104,4 +102,3 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
                                                              "df_prox": df_prox,
                                                              "df_vita": df_vita
                                                              })
-
