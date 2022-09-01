@@ -14,7 +14,11 @@
               <img src="{{ url_for('static', path='/img/F.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
               Food Query
             </a>
-              <a href="{{ url_for('login') }}">Login</a>
+              {% if request.session['user'] %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+              {% endif %}
           </div>
         </nav>
 

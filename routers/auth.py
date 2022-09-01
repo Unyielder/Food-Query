@@ -30,21 +30,21 @@ async def login(request: Request):
 @router.route('/auth')
 async def auth(request: Request):
     token = await oauth.google.authorize_access_token(request)
-    # user = await oauth.google.parse_id_token(request, token)
-    user = token['userinfo']
-    # user = token
-    # print(token)
-    #print(user)
-    #id_token
-    request.session['user'] = user
-    request.session['access_token'] = token['access_token']
+    request.session['user'] = token['userinfo']
+    request.session['id'] = token['id_token']
     response = RedirectResponse(f'/dashboard')
     response.status_code = 302
     return response
 
 
+@router.route('/logout')
+async def logout(request: Request):
+    request.session.pop('user', None)
+    request.session.pop('id', None)
+    return RedirectResponse('/query')
+
+
 @router.route('/dashboard')
-async def dashboard(request: Request, ):
+async def dashboard(request: Request):
     print(request.session['user'])
-    print(request.session['access_token'])
     return templates.TemplateResponse("userBookmarks.html", {"request": request})
