@@ -22,8 +22,6 @@ templates = Jinja2Templates(directory="templates")
 
 @router.route('/login')
 async def login(request: Request):
-    # absolute url for callback
-    # we will define it below
     redirect_uri = request.url_for('auth')
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
@@ -44,11 +42,8 @@ async def auth(request: Request):
             profile_url=token['userinfo']['picture']
         )
         new_user.save()
-    else:
-        print("umm i guess user is not None")
-        print(user)
 
-    response = RedirectResponse(f'/dashboard')
+    response = RedirectResponse(f'/bookmarks')
     response.status_code = 302
     return response
 
@@ -60,7 +55,3 @@ async def logout(request: Request):
     return RedirectResponse('/query')
 
 
-@router.route('/dashboard')
-async def dashboard(request: Request):
-    print(request.session['user'])
-    return templates.TemplateResponse("userBookmarks.html", {"request": request})
