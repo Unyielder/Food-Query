@@ -2,15 +2,17 @@ from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from mongoengine import connect
 import os
 # from dotenv import load_dotenv
 from routers import query
 from routers import auth
-
+connect(db="FoodQueryDB", host="localhost", port=27017)
 
 app = FastAPI()
 app.include_router(query.router)
 app.include_router(auth.router)
+
 
 app.add_middleware(SessionMiddleware, secret_key=os.environ.get('GOOGLE_CLIENT_SECRET'))
 root = os.path.dirname(os.path.abspath(__file__))
