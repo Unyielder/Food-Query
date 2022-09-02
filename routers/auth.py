@@ -1,9 +1,10 @@
 from authlib.integrations.starlette_client import OAuth
 from starlette.config import Config
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
+from Food_Query.models import User
 
 config = Config('.env')  # read config from .env file
 oauth = OAuth(config)
@@ -32,6 +33,21 @@ async def auth(request: Request):
     token = await oauth.google.authorize_access_token(request)
     request.session['user'] = token['userinfo']
     request.session['id'] = token['id_token']
+
+    user = User.objects(email=token['userinfo']['email'])
+    if not user:
+        new_user = User(
+            id_token=token['id_token'],
+            email=token['userinfo']['email'],
+            first_name=token['userinfo']['given_name'],
+            last_name=token['userinfo']['family_name'],
+            profile_url=token['userinfo']['picture']
+        )
+        new_user.save()
+    else:
+        print("umm i guess user is not None")
+        print(user)
+
     response = RedirectResponse(f'/dashboard')
     response.status_code = 302
     return response
