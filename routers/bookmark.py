@@ -8,7 +8,6 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.route('/bookmarks')
+@router.get('/bookmarks')
 async def dashboard(request: Request):
-    print(request.session['user'])
     return templates.TemplateResponse("userBookmarks.html", {"request": request})

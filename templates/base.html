@@ -16,6 +16,7 @@
             </a>
               {% if request.session['user'] %}
                 <a href="{{ url_for('logout') }}">Logout</a>
+              <img src="{{ request.session['user']['picture'] }}"/>
               {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
               {% endif %}

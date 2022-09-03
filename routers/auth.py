@@ -29,6 +29,7 @@ async def login(request: Request):
 @router.route('/auth')
 async def auth(request: Request):
     token = await oauth.google.authorize_access_token(request)
+    print(token)
     request.session['user'] = token['userinfo']
     request.session['id'] = token['id_token']
 

@@ -5,6 +5,7 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from Food_Query.service import *
 from Food_Query.food import Food
+from Food_Query.models import Bookmark
 
 
 router = APIRouter()
@@ -98,3 +99,25 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
                                                              "df_prox": df_prox,
                                                              "df_vita": df_vita
                                                              })
+
+
+@router.post('/query/{food_code}/{food_desc}/{serving_size}')
+async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size):
+    if 'user' in request.session:
+        bookmark = Bookmark(
+            id_token=request.session['id'],
+            food_code=food_code,
+            food_desc=food_desc,
+            serving_size=serving_size
+        )
+        bookmark.save()
+        response = RedirectResponse('/bookmarks')
+        response.status_code = 302
+        return response
+    # else:
+    #     return RedirectResponse('/login')
+
+
+# @router.post('/')
+# async def go_to_main(request: Request):
+#     return RedirectResponse('/query')
