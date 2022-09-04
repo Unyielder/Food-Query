@@ -10,7 +10,7 @@ class User(Document):
 
 
 class Bookmark(Document):
-    id_token = StringField(required=True, unique=True)
+    id_token = StringField(required=True)
     food_code = IntField(required=True)
     food_desc = StringField(required=True)
     serving_size = StringField(required=True)

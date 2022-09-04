@@ -8,17 +8,18 @@
         <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
     </head>
     <body>
-        <nav class="navbar bg-light mb-5">
-          <div class="container-fluid">
+        <nav class="navbar bg-light mb-5" style="width:100%;">
+          <div>
             <a class="navbar-brand" href="{{ url_for('index') }}">
               <img src="{{ url_for('static', path='/img/F.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
               Food Query
             </a>
               {% if request.session['user'] %}
-                <a href="{{ url_for('logout') }}">Logout</a>
-              <img src="{{ request.session['user']['picture'] }}"/>
+                <a style="float:right;" id="logout" href="{{ url_for('logout') }}">Logout</a>
+              <img id="profilePic" src="{{ request.session['user']['picture'] }}"/>
+              <a href="{{ url_for('get_bookmarks') }}"></a>
               {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
+                <a id="login" href="{{ url_for('login') }}">Login</a>
               {% endif %}
           </div>
         </nav>

@@ -2,8 +2,12 @@
 
 {% block content %}
 
-<h1>Hello {{ request.session['user']['given_name'] }}</h1>
+<h4>Hello {{ request.session['user']['given_name'] }}</h4>
 
-
+<ul>
+    {% for bookmark in bookmarks %}
+        <li><a href="{{ url_for('get_nutrients', food_code=bookmark.food_code, food_desc=bookmark.food_desc, serving_size=bookmark.serving_size) }}">{{ bookmark.food_desc }} {{ bookmark.serving_size }}</a></li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

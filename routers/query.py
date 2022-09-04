@@ -75,7 +75,6 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_food = df_food.merge(df_groups, left_on='nutrient_group_id', right_on='nutrient_group_id')
     df_food = df_food.merge(df_serving, left_on='food_code', right_on='food_code')
 
-    serving_size = request.session['food']['serving_size']
     df_food = df_food[df_food['measure_name'] == serving_size]
     df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
     df_food.sort_values(by='serving_value', inplace=True, ascending=False)
@@ -87,6 +86,20 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_other = df_food[df_food['nutrient_group_name'] == 'Other Components'].reset_index(drop=True)
     df_prox = df_food[df_food['nutrient_group_name'] == 'Proximates'].reset_index(drop=True)
     df_vita = df_food[df_food['nutrient_group_name'] == 'Vitamins'].reset_index(drop=True)
+
+    is_bookmarked = None
+    if 'user' in request.session:
+        bookmark = Bookmark.objects(
+            id_token=request.session['id'],
+            food_code=food_code,
+            food_desc=food_desc,
+            serving_size=serving_size
+        )
+        if not bookmark:
+            is_bookmarked = False
+        else:
+            is_bookmarked = True
+    print('checkbox is', is_bookmarked)
     return templates.TemplateResponse("foodNutrients.html", {"request": request,
                                                              "food_desc": food_desc,
                                                              "serving_size": serving_size,
@@ -97,27 +110,29 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
                                                              "df_carbs": df_carbs,
                                                              "df_other": df_other,
                                                              "df_prox": df_prox,
-                                                             "df_vita": df_vita
+                                                             "df_vita": df_vita,
+                                                             "is_bookmarked": is_bookmarked
                                                              })
 
 
 @router.post('/query/{food_code}/{food_desc}/{serving_size}')
 async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size):
     if 'user' in request.session:
-        bookmark = Bookmark(
+        bookmark = Bookmark.objects(
             id_token=request.session['id'],
             food_code=food_code,
             food_desc=food_desc,
             serving_size=serving_size
         )
-        bookmark.save()
+        if not bookmark:
+            bookmark = Bookmark(
+                id_token=request.session['id'],
+                food_code=food_code,
+                food_desc=food_desc,
+                serving_size=serving_size
+            )
+            bookmark.save()
+
         response = RedirectResponse('/bookmarks')
         response.status_code = 302
         return response
-    # else:
-    #     return RedirectResponse('/login')
-
-
-# @router.post('/')
-# async def go_to_main(request: Request):
-#     return RedirectResponse('/query')
