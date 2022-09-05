@@ -115,7 +115,7 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
                                                              })
 
 
-@router.post('/query/{food_code}/{food_desc}/{serving_size}')
+@router.post('/query/{food_code}/{food_desc}/{serving_size}', status_code=204)
 async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size):
     if 'user' in request.session:
         bookmark = Bookmark.objects(
@@ -133,6 +133,6 @@ async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size
             )
             bookmark.save()
 
-        response = RedirectResponse('/bookmarks')
+        response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
         response.status_code = 302
         return response
