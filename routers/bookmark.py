@@ -11,7 +11,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/bookmarks')
 async def get_bookmarks(request: Request):
-    bookmarks = Bookmark.objects(id_token=request.session['id'])
+    bookmarks = Bookmark.objects(user_id=request.session['id'])
     print(bookmarks)
     return templates.TemplateResponse("userBookmarks.html", {"request": request, "bookmarks": bookmarks})
 

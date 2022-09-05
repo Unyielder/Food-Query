@@ -15,7 +15,7 @@ app.include_router(auth.router)
 app.include_router(bookmark.router)
 
 
-app.add_middleware(SessionMiddleware, secret_key=os.environ.get('GOOGLE_CLIENT_SECRET'))
+app.add_middleware(SessionMiddleware, secret_key='a')#os.environ.get('GOOGLE_CLIENT_SECRET'))
 root = os.path.dirname(os.path.abspath(__file__))
 app.mount("/static", StaticFiles(directory=os.path.join(root, 'static')), name="static")
 templates = Jinja2Templates(directory="templates")

@@ -90,7 +90,7 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     is_bookmarked = None
     if 'user' in request.session:
         bookmark = Bookmark.objects(
-            id_token=request.session['id'],
+            user_id=request.session['id'],
             food_code=food_code,
             food_desc=food_desc,
             serving_size=serving_size
@@ -119,14 +119,14 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
 async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size):
     if 'user' in request.session:
         bookmark = Bookmark.objects(
-            id_token=request.session['id'],
+            user_id=request.session['id'],
             food_code=food_code,
             food_desc=food_desc,
             serving_size=serving_size
         )
         if not bookmark:
             bookmark = Bookmark(
-                id_token=request.session['id'],
+                user_id=request.session['id'],
                 food_code=food_code,
                 food_desc=food_desc,
                 serving_size=serving_size

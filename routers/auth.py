@@ -5,6 +5,7 @@ from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from Food_Query.models import User
+from bson.objectid import ObjectId
 
 config = Config('.env')  # read config from .env file
 oauth = OAuth(config)
@@ -29,20 +30,20 @@ async def login(request: Request):
 @router.route('/auth')
 async def auth(request: Request):
     token = await oauth.google.authorize_access_token(request)
-    print(token)
     request.session['user'] = token['userinfo']
-    request.session['id'] = token['id_token']
+    user = User.objects(email=token['userinfo']['email']).first()
 
-    user = User.objects(email=token['userinfo']['email'])
-    if not user:
-        new_user = User(
+    if user is None:
+        user = User(
             id_token=token['id_token'],
             email=token['userinfo']['email'],
             first_name=token['userinfo']['given_name'],
             last_name=token['userinfo']['family_name'],
             profile_url=token['userinfo']['picture']
         )
-        new_user.save()
+        user.save()
+
+    request.session['id'] = str(user.id)
 
     response = RedirectResponse(f'/bookmarks')
     response.status_code = 302
