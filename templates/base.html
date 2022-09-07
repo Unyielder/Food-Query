@@ -8,19 +8,29 @@
         <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
     </head>
     <body>
-        <nav class="navbar bg-light mb-5" style="width:100%;">
-          <div>
+        <nav class="navbar navbar-expand-lg bg-light mb-5">
+          <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-              <img src="{{ url_for('static', path='/img/F.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
+              <img  src="{{ url_for('static', path='/img/F.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
               Food Query
             </a>
-              {% if request.session['user'] %}
-                <a style="float:right;" id="logout" href="{{ url_for('logout') }}">Logout</a>
-              <a href="{{ url_for('get_bookmarks') }}">Bookmarks</a>
-              <img id="profilePic" src="{{ request.session['user']['picture'] }}"/>
-              {% else %}
-                <a id="login" href="{{ url_for('login') }}">Login with Google</a>
-              {% endif %}
+
+              <ul class="navbar-nav">
+                  {% if request.session['user'] %}
+                  <li class="nav-item"><a class="nav-link" href="{{ url_for('get_bookmarks') }}">Bookmarks</a></li>
+                  <li class="nav-item"><a class="nav-link" id="logout" href="{{ url_for('logout') }}">Logout</a></li>
+                  <li class="nav-item"><img style="width:50px; height:auto;" id="profilePic" src="{{ request.session['user']['picture'] }}"/></li>
+                  {% else %}
+                  <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login with Google</a></li>
+                  {% endif %}
+              </ul>
+
+
+
+
+
+
+
           </div>
         </nav>
 

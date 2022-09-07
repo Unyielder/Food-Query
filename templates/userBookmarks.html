@@ -2,18 +2,25 @@
 
 {% block content %}
 
-<h4>Hello {{ request.session['user']['given_name'] }}</h4>
+<h4 class="mb-5">Hello {{ request.session['user']['given_name'] }}</h4>
 
-<ul>
+{% if bookmarks %}
+<p>Here are your bookmark(s):</p>
+
+<div style="width:50%;" class="list-group bookmark-container">
     {% for bookmark in bookmarks %}
-        <li key="{{ bookmark.id }}"><a href="{{ url_for('get_nutrients', food_code=bookmark.food_code, food_desc=bookmark.food_desc, serving_size=bookmark.serving_size) }}">
+    <div style="display:flex; flex-direction:row;">
+        <a class="list-group-item list-group-item-action" href="{{ url_for('get_nutrients', food_code=bookmark.food_code, food_desc=bookmark.food_desc, serving_size=bookmark.serving_size) }}">
             {{ bookmark.food_desc }}, {{ bookmark.serving_size }} </a>
-
-            <form method="post" action="{{ url_for('delete_bookmark', id_bookmark=bookmark.id) }}">
-                <input class="btn btn-danger" type="submit" value="x"/>
-            </form>
-        </li>
+        <form method="post" action="{{ url_for('delete_bookmark', id_bookmark=bookmark.id) }}" style="display:inline-block;">
+            <input style="border-radius:0%; height:42px;" class="btn btn-light" type="submit" value="x"/>
+        </form>
+    </div>
     {% endfor %}
-</ul>
+</div>
+
+{% else %}
+<p>No bookmarks :( <br>Make sure to save some!</p>
+{% endif %}
 
 {% endblock %}
