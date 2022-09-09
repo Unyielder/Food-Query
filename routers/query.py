@@ -124,15 +124,15 @@ async def save_to_bookmarks(request: Request, food_code, food_desc, serving_size
             food_code=food_code,
             food_desc=food_desc,
             serving_size=serving_size
-        )
-        if not bookmark:
-            bookmark = Bookmark(
+        ).first()
+
+        if bookmark is None:
+            Bookmark(
                 user_id=request.session['id'],
                 food_code=food_code,
                 food_desc=food_desc,
                 serving_size=serving_size
-            )
-            bookmark.save()
+            ).save()
 
         response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
         response.status_code = 302

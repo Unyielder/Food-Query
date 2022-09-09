@@ -55,8 +55,8 @@ async def auth(request: Request):
             serving_size=serving_size
         ).save()
         del request.session['bookmark_to_save']
-
         response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
+
     else:  # regular login
         response = RedirectResponse(f'/bookmarks')
 
