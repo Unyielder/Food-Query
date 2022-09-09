@@ -5,7 +5,6 @@ from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from Food_Query.models import User, Bookmark
-from bson.objectid import ObjectId
 
 config = Config('.env')  # read config from .env file
 oauth = OAuth(config)

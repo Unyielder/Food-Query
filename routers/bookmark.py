@@ -12,13 +12,11 @@ templates = Jinja2Templates(directory="templates")
 @router.get('/bookmarks')
 async def get_bookmarks(request: Request):
     bookmarks = Bookmark.objects(user_id=request.session['id'])
-    print(bookmarks)
     return templates.TemplateResponse("userBookmarks.html", {"request": request, "bookmarks": bookmarks})
 
 
 @router.post('/bookmarks/delete/{id_bookmark}', status_code=204)
 async def delete_bookmark(request: Request, id_bookmark):
-    print(id_bookmark)
     bookmark = Bookmark.objects(
         id=id_bookmark
     )

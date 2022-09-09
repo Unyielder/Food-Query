@@ -99,7 +99,7 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
             is_bookmarked = False
         else:
             is_bookmarked = True
-    print('checkbox is', is_bookmarked)
+
     return templates.TemplateResponse("foodNutrients.html", {"request": request,
                                                              "food_desc": food_desc,
                                                              "serving_size": serving_size,
