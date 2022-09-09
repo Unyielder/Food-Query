@@ -21,7 +21,7 @@
                     <li class="nav-item"><a class="nav-link" id="logout" href="{{ url_for('logout') }}"><span style="color:white">Logout</span></a></li>
                     <li class="nav-item"><img style="width:40px; height:auto;" id="profilePic" src="{{ request.session['user']['picture'] }}"/></li>
                   {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login with Google</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}"><img style="width: 160px; height:auto" src="{{ url_for('static', path='/img/btn_google_signin.png') }}"/></a></li>
                   {% endif %}
               </ul>
           </div>
