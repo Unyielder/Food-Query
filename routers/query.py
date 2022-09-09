@@ -76,7 +76,7 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     df_food = df_food.merge(df_serving, left_on='food_code', right_on='food_code')
 
     df_food = df_food[df_food['measure_name'] == serving_size]
-    df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 2), axis=1)
+    df_food['serving_value'] = df_food.apply(lambda x: round(x['nutrient_value'] * x['conversion_factor_value'], 3), axis=1)
     df_food.sort_values(by='serving_value', inplace=True, ascending=False)
 
     df_aminos = df_food[df_food['nutrient_group_name'] == 'Amino Acids'].reset_index(drop=True)
