@@ -3,8 +3,9 @@
 {% block content %}
 
 
-<div style="background-color:white; width:650px; margin:0px auto;">
+
 {% if bookmarks %}
+<div style="background-color:white; width:650px; margin:0px auto;">
     <h4 class="mb-5">Hello {{ request.session['user']['given_name'] }}</h4>
     <p>Here are your bookmarked queries:</p>
 
@@ -19,11 +20,12 @@
         </div>
         {% endfor %}
     </div>
-
-    {% else %}
-    <p>No bookmarks :( <br>Make sure to save some!</p>
-    <img style="color: blue;" src="{{ url_for('static', path='/img/drawers.png') }}"/>
-    {% endif %}
 </div>
+    {% else %}
+    <div style="text-align:center">
+        <h5 class="mb-5">No bookmarks :(</h5>
+        <img style="opacity:25%; width: 350px; height:auto" src="{{ url_for('static', path='/img/drawers.png') }}"/>
+        {% endif %}
+    </div>
 
 {% endblock %}
