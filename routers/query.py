@@ -81,6 +81,9 @@ async def get_nutrients(request: Request, food_code, food_desc, serving_size):
 
     df_aminos = df_food[df_food['nutrient_group_name'] == 'Amino Acids'].reset_index(drop=True)
     df_lipids = df_food[df_food['nutrient_group_name'] == 'Lipids'].reset_index(drop=True)
+    # Converting grams into milligrams in lipids table
+    df_lipids['serving_value'] = [val * 1000 if unit == 'g' else val for val, unit in zip(df_lipids['serving_value'], df_lipids['unit'])]
+    df_lipids['unit'] = ['mg' for i in range(df_lipids.shape[0])]
     df_minerals = df_food[df_food['nutrient_group_name'] == 'Minerals'].reset_index(drop=True)
     df_carbs = df_food[df_food['nutrient_group_name'] == 'Other Carbohydrates'].reset_index(drop=True)
     df_other = df_food[df_food['nutrient_group_name'] == 'Other Components'].reset_index(drop=True)
