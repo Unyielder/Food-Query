@@ -7,7 +7,9 @@ import os
 from routers import query
 from routers import auth
 from routers import bookmark
-connect(db="FoodQueryDB", host="localhost", port=27017)
+from dotenv import load_dotenv
+load_dotenv()
+connect(host=os.environ.get("MONGODB_URI", None))
 
 app = FastAPI()
 app.include_router(query.router)
