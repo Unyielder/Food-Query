@@ -5,8 +5,15 @@ from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from Food_Query.models import User, Bookmark
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-config = Config('.env')  # read config from .env file
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+
+config_data = {"GOOGLE_CLIENT_ID": GOOGLE_CLIENT_ID, "GOOGLE_CLIENT_SECRET": GOOGLE_CLIENT_SECRET}
+config = Config(environ=config_data)  # read config from .env file
 oauth = OAuth(config)
 oauth.register(
     name='google',
