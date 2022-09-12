@@ -1,9 +1,9 @@
 import sys
-sys.path.append("..")
+#sys.path.append("..")
 from fastapi import APIRouter, Request
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from Food_Query.service import *
+from ..service import *
 from Food_Query.food import Food
 from Food_Query.models import Bookmark
 
