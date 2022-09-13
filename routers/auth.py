@@ -29,6 +29,8 @@ templates = Jinja2Templates(directory="templates")
 
 @router.route('/login')
 async def login(request: Request):
+    print('google_client_id:', GOOGLE_CLIENT_ID)
+    print('google_client_secret:,', GOOGLE_CLIENT_SECRET)
     redirect_uri = request.url_for('auth')
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
