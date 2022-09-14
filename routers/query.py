@@ -1,9 +1,7 @@
-#sys.path.append("..")
 from fastapi import APIRouter, Request
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from service import *
-from food import Food
 from models import Bookmark
 
 
@@ -52,8 +50,6 @@ async def select_servings(request: Request, food_code, food_desc):
     form = await request.form()
     serving_size = form.get('ing_measure')
 
-    food = Food(food_code, food_desc, serving_size)
-    request.session['food'] = food.__dict__
     response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
     response.status_code = 302
     return response
