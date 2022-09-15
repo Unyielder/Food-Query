@@ -15,7 +15,7 @@
               <span style="color:white">Food Query</span>
             </a>
 
-              <ul class="navbar-nav">
+              <ul class="navbar-nav navbar navbar-expand-lg">
                   {% if request.session['user'] %}
                     <li style="color:white;" class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><span style="color:white">Query</span></a></li>
                     <li style="color:white;" class="nav-item"><a class="nav-link" href="{{ url_for('get_bookmarks') }}"><span style="color:white">Bookmarks</span></a></li>
