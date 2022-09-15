@@ -8,3 +8,7 @@ table {
 .unbreakable tr{
     page-break-inside: avoid !important;
 }
+
+#bookmark-container {
+    width: 50%;
+}

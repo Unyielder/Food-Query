@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+{% if bookmarks %}
+<div style="background-color:white; width:650px; margin:0px auto;">
+    <h4 class="mb-5">Hello {{ request.session['user']['given_name'] }}</h4>
+    <p>Here are your bookmarked queries:</p>
+
+    <div style="width:100%;" class="list-group bookmark-container">
+        {% for bookmark in bookmarks %}
+        <div style="display:flex; flex-direction:row;">
+            <a class="list-group-item list-group-item-action" href="{{ url_for('get_nutrients', food_code=bookmark.food_code, food_desc=bookmark.food_desc, serving_size=bookmark.serving_size) }}">
+                {{ bookmark.food_desc }}, {{ bookmark.serving_size }} </a>
+            <form method="post" action="{{ url_for('delete_bookmark', id_bookmark=bookmark.id) }}" style="display:inline-block;">
+                <input style="border-radius:0%; height:42px;" class="btn btn-light" type="submit" value="x"/>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+    {% else %}
+    <div style="text-align:center">
+        <h5 class="mb-5">No bookmarks :(</h5>
+        <img style="opacity:25%; width: 350px; height:auto" src="{{ url_for('static', path='/img/drawers.png') }}"/>
+        {% endif %}
+    </div>
+
+{% endblock %}
