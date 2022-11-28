@@ -8,8 +8,9 @@ from routers import query
 from routers import auth
 from routers import bookmark
 from dotenv import load_dotenv
+import certifi
 load_dotenv()
-connect(host=os.environ.get("MONGODB_URI", None))
+connect(host=os.environ.get("MONGODB_URI", None), tlsCAFile=certifi.where())
 
 app = FastAPI()
 app.include_router(query.router)
