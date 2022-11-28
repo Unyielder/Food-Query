@@ -1,0 +1,18 @@
+version: "3"
+services:
+  food-query:
+    image: unyielder/food-query:linux-amd64
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:5.0.14
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
+    driver: local
