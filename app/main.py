@@ -4,9 +4,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from mongoengine import connect
 import os
-from routers import query
-from routers import auth
-from routers import bookmark
+from routers import query, auth
+from app.routers import bookmark
 from dotenv import load_dotenv
 import certifi
 load_dotenv()

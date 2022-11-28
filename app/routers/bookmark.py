@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
-from models import Bookmark
+from app.db.models import Bookmark
 
 
 router = APIRouter()
