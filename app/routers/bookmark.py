@@ -6,7 +6,7 @@ from app.db.models import Bookmark
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get('/bookmarks')

@@ -3,13 +3,15 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from mongoengine import connect
+import sys
 import os
-from routers import query, auth
+sys.path.append('..')
+from app.routers import query, auth
 from app.routers import bookmark
 from dotenv import load_dotenv
 import certifi
 load_dotenv()
-connect(host=os.environ.get("MONGODB_URI", None), tlsCAFile=certifi.where())
+connect(host=os.environ.get("MONGODB_URI", None))#, tlsCAFile=certifi.where())
 
 app = FastAPI()
 app.include_router(query.router)
