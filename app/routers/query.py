@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException, Form
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from .service import *
@@ -17,11 +17,11 @@ def index(request: Request):
 
 
 @router.post("/query")
-async def search_food_desc(request: Request) -> RedirectResponse:
-    form = await request.form()
-    user_input = form.get("foodDescSearch")
+async def search_food_desc(foodDescSearch: str = Form(...)) -> RedirectResponse:
+    if not foodDescSearch.strip():
+        raise HTTPException(status_code=404, detail="Error, no input")
 
-    response = RedirectResponse(f'/query/{user_input}')
+    response = RedirectResponse(f'/query/{foodDescSearch}')
     response.status_code = 302
     return response
 
@@ -33,9 +33,8 @@ async def get_food_desc(request: Request, user_input: str):
 
 
 @router.post('/query/{user_input}')
-async def select_food_desc(request: Request):
-    form = await request.form()
-    food_code, food_desc = form.get('foodName').split(';')
+async def select_food_desc(foodName: str = Form(...)) -> RedirectResponse:
+    food_code, food_desc = foodName.split(';')
     response = RedirectResponse(f'/query/{food_code}/{food_desc}/serving_size')
     response.status_code = 302
     return response
@@ -44,15 +43,13 @@ async def select_food_desc(request: Request):
 @router.get('/query/{food_code}/{food_desc}/serving_size')
 async def get_servings(request: Request, food_code, food_desc):
     servings = await get_food_servings(food_code)
+    print(servings)
     return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
 
 
 @router.post('/query/{food_code}/{food_desc}/serving_size')
-async def select_servings(request: Request, food_code, food_desc):
-    form = await request.form()
-    serving_size = form.get('ing_measure')
-
-    response = RedirectResponse(f'/query/{food_code}/{food_desc}/{serving_size}')
+async def select_servings(food_code, food_desc, ing_measure: str = Form(...)):
+    response = RedirectResponse(f'/query/{food_code}/{food_desc}/{ing_measure}')
     response.status_code = 302
     return response
 
