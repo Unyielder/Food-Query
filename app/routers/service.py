@@ -1,7 +1,7 @@
+from aiohttp import ClientSession
 from fuzzywuzzy import process, fuzz
 import requests
 import pandas as pd
-import aiohttp
 
 
 def fuzzy_search(text: str) -> list:
@@ -26,9 +26,8 @@ async def get_food_servings(food_code: str) -> dict:
     return servings
 
 
-async def get_food_data(url: str) -> pd.DataFrame:
-    async with aiohttp.ClientSession(trust_env=True) as session:
-        async with session.get(url, ssl=False) as response:
-            data = await response.json()
-            df = pd.DataFrame(data, index=[i for i in range(len(data))])
-            return df
+async def get_food_data(session: ClientSession, url: str) -> pd.DataFrame:
+    async with session.get(url, ssl=False) as response:
+        data = await response.json()
+        df = pd.DataFrame(data, index=[i for i in range(len(data))])
+        return df

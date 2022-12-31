@@ -1,3 +1,4 @@
+import aiohttp
 from fastapi import APIRouter, Request, HTTPException, Form
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -57,20 +58,21 @@ async def select_servings(food_code, food_desc, ing_measure: str = Form(...)):
 @router.get('/query/{food_code}/{food_desc}/{serving_size}')
 async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     try:
-        async with asyncio.TaskGroup() as tg:
-            task_amount = tg.create_task(get_food_data(
-                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en"))
-            task_serving = tg.create_task(get_food_data(
-                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en"))
-            task_names = tg.create_task(get_food_data(
-                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json"))
-            task_groups = tg.create_task(get_food_data(
-                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json"))
+        async with aiohttp.ClientSession() as session:
+            async with asyncio.TaskGroup() as tg:
+                task_amount = tg.create_task(get_food_data(session,
+                    f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en"))
+                task_serving = tg.create_task(get_food_data(session,
+                    f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en"))
+                task_names = tg.create_task(get_food_data(session,
+                    f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json"))
+                task_groups = tg.create_task(get_food_data(session,
+                    f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json"))
 
-            df_amount = await task_amount
-            df_serving = await task_serving
-            df_names = await task_names
-            df_groups = await task_groups
+                df_amount = await task_amount
+                df_serving = await task_serving
+                df_names = await task_names
+                df_groups = await task_groups
 
         df_food = df_amount.merge(df_names, left_on='nutrient_name_id', right_on='nutrient_name_id')
         df_food = df_food.merge(df_groups, left_on='nutrient_group_id', right_on='nutrient_group_id')
