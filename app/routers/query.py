@@ -5,6 +5,7 @@ from .service import *
 import sys
 sys.path.append('..')
 from app.db.models import Bookmark
+import asyncio
 
 
 router = APIRouter()
@@ -43,7 +44,6 @@ async def select_food_desc(foodName: str = Form(...)) -> RedirectResponse:
 @router.get('/query/{food_code}/{food_desc}/serving_size')
 async def get_servings(request: Request, food_code, food_desc):
     servings = await get_food_servings(food_code)
-    print(servings)
     return templates.TemplateResponse("foodServings.html", {"request": request, "food_desc": food_desc, "servings": servings})
 
 
@@ -57,14 +57,20 @@ async def select_servings(food_code, food_desc, ing_measure: str = Form(...)):
 @router.get('/query/{food_code}/{food_desc}/{serving_size}')
 async def get_nutrients(request: Request, food_code, food_desc, serving_size):
     try:
-        df_amount = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en")
-        df_amount = df_amount[['food_code', 'nutrient_value', 'nutrient_name_id', 'nutrient_web_name']]
-        df_serving = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en")
-        df_serving = df_serving[['food_code', 'conversion_factor_value', 'measure_name']]
-        df_names = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json")
-        df_names = df_names[['nutrient_name_id', 'nutrient_web_name', 'unit', 'nutrient_group_id']]
-        df_groups = await get_food_data(f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json")
-        df_groups = df_groups[['nutrient_group_id', 'nutrient_group_name']]
+        async with asyncio.TaskGroup() as tg:
+            task_amount = tg.create_task(get_food_data(
+                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientamount/?id={food_code}&type=json&lang=en"))
+            task_serving = tg.create_task(get_food_data(
+                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/servingsize/?id={food_code}&type=json&lang=en"))
+            task_names = tg.create_task(get_food_data(
+                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientname/?lang=en&type=json"))
+            task_groups = tg.create_task(get_food_data(
+                f"https://food-nutrition.canada.ca/api/canadian-nutrient-file/nutrientgroup/?lang=en&type=json"))
+
+            df_amount = await task_amount
+            df_serving = await task_serving
+            df_names = await task_names
+            df_groups = await task_groups
 
         df_food = df_amount.merge(df_names, left_on='nutrient_name_id', right_on='nutrient_name_id')
         df_food = df_food.merge(df_groups, left_on='nutrient_group_id', right_on='nutrient_group_id')
